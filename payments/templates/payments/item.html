@@ -1,8 +1,11 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html>
 <head>
     <title>{{ title }}</title>
     <script src="https://js.stripe.com/v3/"></script>
+    <link rel="icon" href="{% static 'img/favicon.png' %}">
 </head>
 <body>
     <h1>{{ item.name }}</h1>
@@ -14,22 +17,9 @@
     <script type="text/javascript">
         var stripe = Stripe('{{ stripe_public_key }}');
         var redirect_url = '{% url "payments:buy" 0 %}'
-
         redirect_url = redirect_url.substring(0, redirect_url.length - 1)
-
-        let currentUrl = window.location.href;
-        let lastSlashIndex = currentUrl.lastIndexOf('/');
-        let numberAfterSlash = currentUrl.substring(lastSlashIndex + 1);
-        alert(redirect_url + numberAfterSlash)
-
-
-
-        var buyButton = document.getElementById('buy-button');
-        buyButton.addEventListener('click', function() {
-          fetch(redirect_url + numberAfterSlash, {method: 'GET'})
-          .then(response => response.json())
-          .then(session => stripe.redirectToCheckout({ sessionId: session.id }))
-        });
     </script>
+    <script src="{% static 'js/stripe_item_checkout.js' %}"></script>
+
 </body>
 </html>
