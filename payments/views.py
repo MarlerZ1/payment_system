@@ -100,7 +100,10 @@ def buy_order(request, order_id):
             cancel_url=request.build_absolute_uri('/cancel/'),
         )
 
-        return JsonResponse({'url': checkout_session.url})
+        return JsonResponse({
+            'id': checkout_session.id,
+            'url': checkout_session.url
+        })
 
     except Order.DoesNotExist as e:
         print(e)
