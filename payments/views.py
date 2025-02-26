@@ -1,3 +1,6 @@
+from lib2to3.fixes.fix_input import context
+from msilib.schema import ListView
+
 import stripe
 from django.conf import settings
 from django.http import JsonResponse
@@ -114,3 +117,26 @@ def buy_order(request, order_id):
     except Exception as e:
         print(e)
         return JsonResponse({}, status=500)
+
+
+class OrderView(TemplateView):
+    template_name = 'payments/order.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        try:
+            order_id = kwargs.get('order_id')
+
+            order = Order.objects.get(id=order_id)
+
+            context["taxes"] = order.taxes.all()
+            context["items"] = order.items.all()
+            context["discount"] = order.discount
+            context["stripe_public_key"] = settings.STRIPE_PUBLIC_KEY
+            return context
+        except Order.DoesNotExist as e:
+            print(e)
+            return context
+        except Exception as e:
+            print(e)
+            return context

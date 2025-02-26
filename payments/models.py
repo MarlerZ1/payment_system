@@ -1,5 +1,6 @@
 import stripe
 from django.contrib.auth.models import AbstractUser
+from django.core.exceptions import ValidationError
 from django.db import models
 
 
@@ -12,7 +13,7 @@ class Item(models.Model):
     currency = models.CharField(max_length=3, choices=[('USD', 'USD'), ('RUB', 'RUB'), ('EUR', 'EUR')], default='USD')
 
     def __str__(self):
-        return str(self.name)
+        return str(self.currency) + "\t|\t" + str(self.name)
 
 
 class User(AbstractUser):
