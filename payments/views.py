@@ -1,6 +1,7 @@
 import stripe
 from django.conf import settings
 from django.http import JsonResponse
+from django.urls import reverse
 from django.views.generic import TemplateView
 
 from common.mixins.mixins import TitleMixin
@@ -46,8 +47,8 @@ def buy_item(request, item_id):
                 'quantity': 1,
             }],
             mode='payment',
-            success_url='http://localhost:8000/success/',
-            cancel_url='http://localhost:8000/cancel/',
+            success_url=request.build_absolute_uri(reverse("payments:main")),
+            cancel_url=request.build_absolute_uri(reverse("payments:main")),
         )
         return JsonResponse({
             'id': checkout_session.id,
@@ -87,7 +88,6 @@ def buy_order(request, order_id):
             }
 
             line_items.append(line_item)
-
         checkout_session = stripe.checkout.Session.create(
             payment_method_types=['card'],
             line_items=line_items,
@@ -95,8 +95,8 @@ def buy_order(request, order_id):
             discounts=[{
                 'coupon': order.discount.stripe_id
             }, ] if order.discount else [],
-            success_url=request.build_absolute_uri('/success/'),
-            cancel_url=request.build_absolute_uri('/cancel/'),
+            success_url=request.build_absolute_uri(reverse("payments:main")),
+            cancel_url=request.build_absolute_uri(reverse("payments:main")),
         )
 
         return JsonResponse({
