@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.core.exceptions import ValidationError
 
+from payments.forms import OrderForm
 from payments.models import Item, User, Order, Tax, Discount
 
 
@@ -21,26 +22,13 @@ class UserAdmin(admin.ModelAdmin):
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     list_display = ['created_at']
+    readonly_fields = ['created_at']
+    form = OrderForm
 
     def save_model(self, request, obj, form, change):
-        try:
-            new_items = form.cleaned_data.get('items', [])
-            self.validate(new_items)
-        except ValidationError as e:
-            form.add_error('items', e)
-            self.message_user(request, e.message, level='error')
-            return
-        else:
+        if form.is_valid():
             super().save_model(request, obj, form, change)
 
-
-    def validate(self, new_items):
-        item_currency = None
-        for item in new_items:
-            if item_currency is None:
-                item_currency = item.currency
-            elif item.currency != item_currency:
-                raise ValidationError("Все товары в заказе должны иметь одинаковую валюту.")
 
 @admin.register(Tax)
 class TaxAdmin(admin.ModelAdmin):
