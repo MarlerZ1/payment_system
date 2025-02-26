@@ -94,7 +94,7 @@ def buy_order(request, order_id):
             mode='payment',
             discounts=[{
                 'coupon': order.discount.stripe_id
-            }, ],
+            }, ] if order.discount else [],
             success_url=request.build_absolute_uri('/success/'),
             cancel_url=request.build_absolute_uri('/cancel/'),
         )
