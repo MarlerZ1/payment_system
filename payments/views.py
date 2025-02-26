@@ -119,9 +119,9 @@ def buy_order(request, order_id):
         return JsonResponse({}, status=500)
 
 
-class OrderView(TemplateView):
+class OrderView(TitleMixin, TemplateView):
     template_name = 'payments/order.html'
-
+    title = "PaymentSystem - Order"
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         try:
