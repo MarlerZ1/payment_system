@@ -39,6 +39,15 @@ class Discount(models.Model):
             except Exception as e:
                 print(e)
 
+    def delete(self, *args, **kwargs):
+        if self.stripe_id:
+            try:
+                stripe.Coupon.delete(self.stripe_id)
+            except stripe.error.StripeError as e:
+                print("Ошибка удаления купона в Stripe:", e)
+
+        super().delete(*args, **kwargs)
+
     def __str__(self):
         return str(self.amount)
 
@@ -65,6 +74,15 @@ class Tax(models.Model):
                 super().save(*args, force_insert=False, force_update=False, using=None, update_fields=None)
             except Exception as e:
                 print(e)
+
+    def delete(self, *args, **kwargs):
+        if self.stripe_id:
+            try:
+                stripe.TaxRate.modify(self.stripe_id, active=False)
+            except stripe.error.StripeError as e:
+                print("Ошибка удаления налога в Stripe:", e)
+
+        super().delete(*args, **kwargs)
 
 
 class Order(models.Model):
