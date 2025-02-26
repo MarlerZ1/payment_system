@@ -5,8 +5,12 @@ from payments.models import Item, User, Order, Tax, Discount
 
 @admin.register(Item)
 class ItemAdmin(admin.ModelAdmin):
-    list_display = ['name', 'price', 'description']
-
+    list_display = ['name', 'price', 'currency', 'description']
+    fieldsets = [
+        (None, {
+            'fields': ('name', ('price', 'currency'), 'description')
+        }),
+    ]
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):

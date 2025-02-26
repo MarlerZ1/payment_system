@@ -9,6 +9,8 @@ class Item(models.Model):
 
     price = models.DecimalField(max_digits=10, decimal_places=2)
 
+    currency = models.CharField(max_length=3, choices=[('USD', 'USD'), ('RUB', 'RUB'), ('EUR', 'EUR')], default='USD')
+
     def __str__(self):
         return str(self.name)
 
@@ -67,5 +69,5 @@ class Tax(models.Model):
 class Order(models.Model):
     items = models.ManyToManyField(Item)
     discount = models.ForeignKey(to=Discount, on_delete=models.CASCADE, blank=True, null=True)
-    taxes = models.ManyToManyField(Tax, blank=True, null=True)
+    taxes = models.ManyToManyField(Tax, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
