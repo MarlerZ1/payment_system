@@ -16,24 +16,30 @@
                     {% endfor %}
                 </div>
             </div>
-            <div class="col-md-6">
-                <h3 class="text-center">Налоги и скидка</h3>
-                <div class="mb-3">
-                    <h5>Налоги</h5>
-                    <ul class="list-group">
-                        {% for tax in taxes %}
-                            <li class="list-group-item">
-                                <strong>{{ tax.name }}</strong> - {{ tax.rate }}%
-                            </li>
-                        {% endfor %}
-                    </ul>
+            {% if taxes or discount%}
+                <div class="col-md-6">
+                    <h3 class="text-center">Налоги и скидка</h3>
+                    {% if taxes %}
+                        <div class="mb-3">
+                            <h5>Налоги</h5>
+                            <ul class="list-group">
+                                {% for tax in taxes %}
+                                    <li class="list-group-item">
+                                        <strong>{{ tax.name }}</strong> - {{ tax.rate }}%
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                    {% if discount %}
+                        <div class="mb-3">
+                            <h5>Скидка</h5>
+                            <p><strong>Промокод:</strong> {{ discount.code }}</p>
+                            <p><strong>Сумма:</strong> {{ discount.amount }} %</p>
+                        </div>
+                    {% endif %}
                 </div>
-                <div class="mb-3">
-                    <h5>Скидка</h5>
-                    <p><strong>Промокод:</strong> {{ discount.code }}</p>
-                    <p><strong>Сумма:</strong> {{ discount.amount }} %</p>
-                </div>
-            </div>
+            {% endif %}
         </div>
 
 
