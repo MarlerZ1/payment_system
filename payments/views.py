@@ -140,3 +140,13 @@ class OrderView(TitleMixin, TemplateView):
         except Exception as e:
             print(e)
             return context
+
+class MainView(TitleMixin, TemplateView):
+    template_name = 'payments/main.html'
+    title = 'PaymentSystem - Main'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['items'] = Item.objects.all()
+        context['orders'] = Order.objects.all()
+        return context
