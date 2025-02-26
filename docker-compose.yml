@@ -19,14 +19,23 @@ services:
   django:
     container_name: "ps_django"
     build: ./
-    command: bash -c "python manage.py collectstatic --noinput && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    command: bash -c "python manage.py collectstatic --noinput && python manage.py migrate && gunicorn --bind 0.0.0.0:8000 --workers ${GUNICORN_WORKERS} payment_system.wsgi:application"
     volumes:
       - ./:/usr/src/app
-    ports:
-      - "8000:8000"
     depends_on:
       db:
         condition: service_healthy
+
+  nginx:
+    container_name: "ps_nginx"
+    image: nginx:1.27.4
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./staticfiles:/usr/src/app/staticfiles
+    ports:
+      - "80:80"
+    depends_on:
+      - django
 
 volumes:
   postgres_data:

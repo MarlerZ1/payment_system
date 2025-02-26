@@ -51,7 +51,6 @@ def buy_item(request, item_id):
         )
         return JsonResponse({
             'id': checkout_session.id,
-            'url': checkout_session.url,
         })
     except Order.DoesNotExist as e:
         print(e)
@@ -102,7 +101,6 @@ def buy_order(request, order_id):
 
         return JsonResponse({
             'id': checkout_session.id,
-            'url': checkout_session.url
         })
 
     except Order.DoesNotExist as e:
